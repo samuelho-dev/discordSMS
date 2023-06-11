@@ -1,65 +1,38 @@
+import './config';
 import './discord/bot';
+import express from 'express';
+import MessagingResponse from 'twilio/lib/twiml/MessagingResponse';
+import db from './db/knex';
+import { Member } from 'knex/types/tables';
 
-// import express from 'express';
-// import db from './knex';
-// import config from './config';
+const app = express();
+const PORT = 3000;
 
-// const app = express();
-// const PORT = 3000;
+app.post('/interactions', async function (req, res) {});
 
-// app.post('/interactions', async function (req, res) {
-//   const { type, id, data } = req.body;
+app.post('/sms', async function (req, res) {
+  const incomingNumber = req.body.From;
+  const members = db<Member>('members');
 
-//   const { name, options } = data;
+  if (!validatePhoneForE164(incomingNumber)) {
+    return res.status(400).send('Number is not valid');
+  }
 
-//   if (name === 'createsms' && id) {
-//     const smsMessage = options[0].value;
+  const twiml = new MessagingResponse();
+  const smsBody = req.body.Body.toUpperCase();
 
-//     // Fetch all phone numbers from the database
-//     let phoneNumbers = await db('subscribers').select('phoneNumber');
+  if (smsBody === 'SUBSCRIBE') {
+    await members.insert({ phone_number: incomingNumber });
+    twiml.message('You are now subscribed!');
+    res.writeHead(200, { 'Content-Type': 'text/xml' });
+    res.end(twiml.toString());
+  } else if (smsBody === 'STOP') {
+    twiml.message('You are now unsubscribed.');
+    res.writeHead(200, { 'Content-Type': 'text/xml' });
+    res.end(twiml.toString());
+  }
+});
 
-//     // Send an SMS to each phone number
-//     for (let subscriber of phoneNumbers) {
-//       twilioClient.messages
-//         .create({
-//           body: smsMessage,
-//           from: config.TWILIO_PHONE_NUMBER,
-//           to: subscriber.phoneNumber,
-//         })
-//         .then((message) =>
-//           console.log(`Message sent to ${subscriber.phoneNumber}`),
-//         )
-//         .catch((err) =>
-//           console.error(
-//             `Failed to send SMS to ${subscriber.phoneNumber}: ${err.message}`,
-//           ),
-//         );
-//     }
-//     return res.send({
-//       type: '',
-//       data: {
-//         content: 'Done',
-//       },
-//     });
-//   }
-// });
-
-// app.post('subscribe', async function (req, res) {
-//   const incomingNumber = req.body.From;
-//   const smsBody = req.body.Body;
-
-//   if (smsBody === 'SUBSCRIBE') {
-//   }
-// });
-
-// app.post('unsubscribe', async function (req, res) {
-//   const incomingNumber = req.body.From;
-//   const smsBody = req.body.Body;
-
-//   if (smsBody === 'STOP') {
-//   }
-// });
-
-// app.listen(PORT, () => {
-//   console.log('Listening on port', PORT);
-// });
+app.listen(PORT, () => {
+  console.log('Listening on port', PORT);
+});
