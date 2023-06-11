@@ -18,6 +18,7 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction: CommandInteraction, client: Client) {
   const number = interaction.options.get('phone_number')?.value;
   if (typeof number !== 'string') return;
+  if (!interaction.guild || !interaction.guild.id) return;
 
   // VALIDATE PHONE NUMBER
   const validatedNumber = validatePhoneForE164(number);
@@ -32,7 +33,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
   // INSERT INTO DB
   try {
     await members.insert({
-      guild_id: interaction.guild?.id,
+      guild_id: interaction.guild.id,
       phone_number: number,
     });
   } catch (err) {
