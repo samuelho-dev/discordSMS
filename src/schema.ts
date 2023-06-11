@@ -15,7 +15,7 @@ db.schema.createTableIfNotExists('members', (table) => {
   table.increments('id');
   table.string('guild_id');
   table.string('phone_number');
-  table.boolean('active');
+  table.boolean('active').defaultTo(true);
   table.dateTime('created_at').defaultTo(new Date());
   table.dateTime('updated_at').defaultTo(new Date());
 });
