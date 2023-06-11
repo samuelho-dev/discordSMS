@@ -5,7 +5,7 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { Member, Message } from 'knex/types/tables';
-import db from '../knex';
+import db from '../db/knex';
 import twilioClient from '../twilio';
 import config from '../config';
 

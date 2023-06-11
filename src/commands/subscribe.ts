@@ -1,6 +1,6 @@
 import { Client, CommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { Member } from 'knex/types/tables';
-import db from '../knex';
+import db from '../db/knex';
 
 export const data = new SlashCommandBuilder()
   .setName('subscribe')
