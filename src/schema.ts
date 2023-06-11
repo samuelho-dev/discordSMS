@@ -9,6 +9,12 @@ declare module 'knex/types/tables' {
     active: boolean;
     updated_at: string;
   }
+  interface Message {
+    id: number;
+    guild_id: string;
+    message: string;
+    sent_at: string;
+  }
 }
 
 db.schema.createTableIfNotExists('members', (table) => {
@@ -18,4 +24,11 @@ db.schema.createTableIfNotExists('members', (table) => {
   table.boolean('active').defaultTo(true);
   table.dateTime('created_at').defaultTo(new Date());
   table.dateTime('updated_at').defaultTo(new Date());
+});
+
+db.schema.createTableIfNotExists('messages', (table) => {
+  table.increments('id');
+  table.string('guild_id');
+  table.string('message');
+  table.dateTime('sent_at').defaultTo(new Date());
 });
