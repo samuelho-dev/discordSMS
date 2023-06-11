@@ -1,7 +1,7 @@
 import knex from 'knex';
 
 const db = knex({
-  client: 'mysql',
+  client: 'pg',
   connection: process.env.DATABASE_URL,
   pool: { min: 0, max: 7 },
 });
