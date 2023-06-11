@@ -45,12 +45,17 @@ export async function execute(interaction: CommandInteraction, client: Client) {
     .where('active', true)
     .select('phone_number');
 
+  if (phoneNumbers.length === 0) {
+    return void interaction.reply('There are no subscribers to this guild.');
+  }
+
   const failedNumbers = [];
 
   // SEND MESSAGE TO NUMBERS - PUSH FAILED NUMBERS TO ARR
   for (const number of phoneNumbers) {
-    const E164Number = `+1${number}`;
+    const E164Number = number.phone_number;
     const validatedNumber = validatePhoneForE164(E164Number);
+
     if (validatedNumber) {
       await twilioClient.messages
         .create({
@@ -77,16 +82,29 @@ export async function execute(interaction: CommandInteraction, client: Client) {
     console.error(err);
     return void interaction.reply(
       `An error occured during message upload. ${
-        failedNumbers.length !== 0 &&
-        `Numbers that failed to send: ${failedNumbers.join('\n')}`
+        failedNumbers.length !== 0
+          ? `Numbers that failed to send: ${JSON.stringify(failedNumbers)}`
+          : ''
+      }`,
+    );
+  }
+
+  // IF ALL NUMBERS FAILED TO SEND
+  if (phoneNumbers.length === failedNumbers.length) {
+    return void interaction.reply(
+      `An error occured during message delivery. ${
+        failedNumbers.length !== 0
+          ? `Numbers that failed to send: ${JSON.stringify(failedNumbers)}`
+          : ''
       }`,
     );
   }
 
   return void interaction.reply(
     `Messages have been sent. ${
-      failedNumbers.length !== 0 &&
-      `Numbers that failed to send: ${failedNumbers.join('\n')}`
+      failedNumbers.length !== 0
+        ? `Numbers that failed to send: ${JSON.stringify(failedNumbers)}`
+        : ''
     }`,
   );
 }
