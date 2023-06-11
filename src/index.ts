@@ -1,9 +1,9 @@
-import './config';
 import './discord/bot';
 import express from 'express';
 import MessagingResponse from 'twilio/lib/twiml/MessagingResponse';
 import db from './db/knex';
 import { Member } from 'knex/types/tables';
+import validatePhoneForE164 from './utils/validateNumberE164';
 
 const app = express();
 const PORT = 3000;

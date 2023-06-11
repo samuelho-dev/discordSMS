@@ -8,6 +8,7 @@ import { Member, Message } from 'knex/types/tables';
 import db from '../db/knex';
 import twilioClient from '../twilio';
 import config from '../config';
+import validatePhoneForE164 from '../utils/validateNumberE164';
 
 export const data = new SlashCommandBuilder()
   .setName('sendsms')
@@ -26,6 +27,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
   // IF THE MESSAGE ISNT A STRING
   const message = interaction.options.get('message')?.value;
   if (typeof message !== 'string') return;
+  if (!interaction.guild || !interaction.guild.id) return;
 
   // MEMBER MUST BE AN ADMIN
   if (!member.permissions.has('Administrator')) {
@@ -39,7 +41,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
 
   // GET ALL PHONE NUMBERS
   const phoneNumbers = await members
-    .where('guild_id', interaction.guild?.id)
+    .where('guild_id', interaction.guild.id)
     .where('active', true)
     .select('phone_number');
 
@@ -47,12 +49,13 @@ export async function execute(interaction: CommandInteraction, client: Client) {
 
   // SEND MESSAGE TO NUMBERS - PUSH FAILED NUMBERS TO ARR
   for (const number of phoneNumbers) {
-    const validatedNumber = validatePhoneForE164(`+1${number}`);
+    const E164Number = `+1${number}`;
+    const validatedNumber = validatePhoneForE164(E164Number);
     if (validatedNumber) {
       await twilioClient.messages
         .create({
           from: config.TWILIO_PHONE_NUMBER,
-          to: `+1${number}`,
+          to: E164Number,
           body: message,
         })
         .catch((err) => {
@@ -67,7 +70,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
   // ADD THE MESSAGE TO DB
   try {
     await messages.insert({
-      guild_id: interaction.guild?.id,
+      guild_id: interaction.guild.id,
       message: message,
     });
   } catch (err) {

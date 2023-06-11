@@ -1,10 +1,11 @@
 import { Client, CommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { Member } from 'knex/types/tables';
 import db from '../db/knex';
+import validatePhoneForE164 from '../utils/validateNumberE164';
 
 export const data = new SlashCommandBuilder()
-  .setName('subscribe')
-  .setDescription('Subscribe to the text messaging list.')
+  .setName('unsubscribe')
+  .setDescription('Unsubscribe from the SMS messaging list.')
   .addStringOption((option) =>
     option
       .setName('phone_number')
@@ -19,9 +20,10 @@ export async function execute(interaction: CommandInteraction, client: Client) {
   const number = interaction.options.get('phone_number')?.value;
   if (typeof number !== 'string') return;
   if (!interaction.guild || !interaction.guild.id) return;
+  const E164Number = `+1${number}`;
 
   // VALIDATE PHONE NUMBER
-  const validatedNumber = validatePhoneForE164(number);
+  const validatedNumber = validatePhoneForE164(E164Number);
   if (!validatedNumber) {
     return void interaction.reply(
       'Number is not in valid format (10 digits with area code, no spaces). Ex.8183334200',
@@ -35,7 +37,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
     await members
       .where({
         guild_id: interaction.guild.id,
-        phone_number: number,
+        phone_number: E164Number,
       })
       .update({
         active: false,
@@ -44,9 +46,9 @@ export async function execute(interaction: CommandInteraction, client: Client) {
   } catch (err) {
     console.error(err);
     return void interaction.reply(
-      'An error occured during unsubscribing, try again in a second.',
+      'An error occured during unsubscribing, try again in a second. ❌',
     );
   }
 
-  return void interaction.reply('You are now unsubscribed. 📬');
+  return void interaction.reply('You are now unsubscribed. 👋');
 }

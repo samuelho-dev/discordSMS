@@ -1,4 +1,9 @@
 declare module 'knex/types/tables' {
+  interface Guild {
+    id: number;
+    guild_id: string;
+    created_at: Date;
+  }
   interface Member {
     id: number;
     guild_id: string;
