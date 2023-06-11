@@ -17,7 +17,6 @@
     "incremental": true,
     "tsBuildInfoFile": "./build/tsconfig.tsbuildinfo",
     "outDir": "build",
-    "rootDir": "src",
     "noUncheckedIndexedAccess": true,
     "baseUrl": ".",
     "paths": {
