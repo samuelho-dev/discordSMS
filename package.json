@@ -8,6 +8,7 @@
     "start": "node build/index.js",
     "dev": "concurrently \"tsc -w\" \"nodemon build/index.js\"",
     "deploy:commands": "tsc && node build/deploy-commands.js",
+    "migrate": "knex migrate:latest --env production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,7 +29,6 @@
     "node-fetch": "^3.3.1",
     "nodemon": "^2.0.22",
     "pg": "^8.11.0",
-    "postgres": "^3.3.5",
     "twilio": "^4.11.2",
     "typescript": "^5.1.3"
   },
