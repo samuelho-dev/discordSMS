@@ -7,6 +7,8 @@ import db from './db/knex';
 
 export function createRestApi(client: Client) {
   const app = express();
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
 
   app.post('/sms', async function (req, res) {
     const incomingNumber = req.body.From;
