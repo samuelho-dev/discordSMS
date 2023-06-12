@@ -1,7 +1,14 @@
-import { Client, CommandInteraction, SlashCommandBuilder } from 'discord.js';
+import {
+  Client,
+  CommandInteraction,
+  GuildMember,
+  SlashCommandBuilder,
+} from 'discord.js';
 import { Guild, Member } from 'knex/types/tables';
 import db from '../db/knex';
 import validatePhoneForE164 from '../utils/validateNumberE164';
+import twilioClient from '../twilio';
+import config from '../config';
 
 export const data = new SlashCommandBuilder()
   .setName('subscribe')
@@ -21,6 +28,14 @@ export async function execute(interaction: CommandInteraction, client: Client) {
   const E164Number = `+1${number}`;
   if (typeof number !== 'string') return;
   if (!interaction.guild || !interaction.guild.id) return;
+
+  // MEMBER MUST BE AN ADMIN
+  const member = interaction.member as GuildMember;
+  if (!member.permissions.has('Administrator')) {
+    return interaction.reply(
+      'You do not have the required permissions to use this command. ❌',
+    );
+  }
 
   const guilds = db<Guild>('guilds');
 
@@ -60,5 +75,18 @@ export async function execute(interaction: CommandInteraction, client: Client) {
     return void interaction.reply('An error occured during insert. ❌');
   }
 
-  return void interaction.reply('You are now subscribed! 📬');
+  try {
+    await twilioClient.messages.create({
+      from: config.TWILIO_PHONE_NUMBER,
+      to: E164Number,
+      body: 'Welcome to Hi-Pass 🌊! Stay tuned for more events coming straight to you. To opt out, reply "STOP"',
+    });
+  } catch (err) {
+    console.error(err);
+    return void interaction.reply(
+      'An error occured during message delivery. ❌',
+    );
+  }
+
+  return void interaction.reply('The number is now subscribed! 📬');
 }

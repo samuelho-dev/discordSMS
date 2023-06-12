@@ -1,4 +1,9 @@
-import { Client, CommandInteraction, SlashCommandBuilder } from 'discord.js';
+import {
+  Client,
+  CommandInteraction,
+  GuildMember,
+  SlashCommandBuilder,
+} from 'discord.js';
 import { Member } from 'knex/types/tables';
 import db from '../db/knex';
 import validatePhoneForE164 from '../utils/validateNumberE164';
@@ -20,8 +25,16 @@ export async function execute(interaction: CommandInteraction, client: Client) {
   const number = interaction.options.get('phone_number')?.value;
   if (typeof number !== 'string') return;
   if (!interaction.guild || !interaction.guild.id) return;
-  const E164Number = `+1${number}`;
 
+  // MEMBER MUST BE AN ADMIN
+  const member = interaction.member as GuildMember;
+  if (!member.permissions.has('Administrator')) {
+    return interaction.reply(
+      'You do not have the required permissions to use this command. ❌',
+    );
+  }
+
+  const E164Number = `+1${number}`;
   // VALIDATE PHONE NUMBER
   const validatedNumber = validatePhoneForE164(E164Number);
   if (!validatedNumber) {
