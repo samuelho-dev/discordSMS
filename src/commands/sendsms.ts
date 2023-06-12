@@ -63,6 +63,9 @@ export async function execute(interaction: CommandInteraction, client: Client) {
         })
         .catch((err) => {
           console.error(err);
+          void interaction.reply(
+            `Error occured : ${JSON.stringify(err.message)}`,
+          );
           failedNumbers.push(number);
         });
     } else {

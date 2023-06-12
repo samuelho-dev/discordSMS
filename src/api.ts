@@ -14,8 +14,8 @@ export function createRestApi(client: Client) {
   // SLOW DOWN IMPLEMENT
   const speedLimiter = slowDown({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    delayAfter: 10, // allow 10 requests per 15 minutes, then...
-    delayMs: 500, // begin adding 500ms of delay per request above 10
+    delayAfter: 100, // allow 100 requests per 15 minutes, then...
+    delayMs: 500, // begin adding 500ms of delay per request above 100
   });
   app.use(speedLimiter);
 
@@ -53,7 +53,7 @@ export function createRestApi(client: Client) {
 
   app.post('smsStatus', async function (req, res) {
     const { ErrorCode, From } = req.body;
-
+    console.log(req.body);
     // Change member to inactive from Stop word
     // https://static1.twilio.com/docs/api/errors/80901
     if (ErrorCode === '80901') {
