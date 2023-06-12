@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node build/src/index.js --omit=dev",
+    "start": "node build/src/index.js",
     "dev": "concurrently \"tsc -w\" \"nodemon build/src/index.js\"",
     "deploy:commands": "tsc && node build/src/deploy-commands.js",
     "migrate": "knex migrate:latest --env production",
