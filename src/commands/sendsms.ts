@@ -22,17 +22,16 @@ export const data = new SlashCommandBuilder()
   );
 
 export async function execute(interaction: CommandInteraction, client: Client) {
-  const member = interaction.member as GuildMember;
-
   // IF THE MESSAGE ISNT A STRING
   const message = interaction.options.get('message')?.value;
   if (typeof message !== 'string') return;
   if (!interaction.guild || !interaction.guild.id) return;
 
   // MEMBER MUST BE AN ADMIN
+  const member = interaction.member as GuildMember;
   if (!member.permissions.has('Administrator')) {
     return interaction.reply(
-      'You do not have the required permissions to use this command.',
+      'You do not have the required permissions to use this command. ❌',
     );
   }
 
