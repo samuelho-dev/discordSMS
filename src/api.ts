@@ -44,7 +44,7 @@ export function createRestApi(client: Client) {
       });
 
       twiml.message(
-        'You are now subscribed to Hi-Pass events! 🎸 to opt out, reply "STOP" ',
+        'You are now subscribed to Hi-Pass events! 🌊 to opt out, reply "STOP" ',
       );
       res.writeHead(200, { 'Content-Type': 'text/xml' });
       res.end(twiml.toString());
