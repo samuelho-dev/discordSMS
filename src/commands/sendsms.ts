@@ -83,8 +83,8 @@ export async function execute(interaction: CommandInteraction, client: Client) {
     return void interaction.reply(
       `An error occured during message upload. ${
         failedNumbers.length !== 0
-          ? `Numbers that failed to send: ${JSON.stringify(failedNumbers)}`
-          : ''
+          ? `❌ Numbers that failed to send: ${JSON.stringify(failedNumbers)}`
+          : '🧳'
       }`,
     );
   }
@@ -94,8 +94,8 @@ export async function execute(interaction: CommandInteraction, client: Client) {
     return void interaction.reply(
       `An error occured during message delivery. ${
         failedNumbers.length !== 0
-          ? `Numbers that failed to send: ${JSON.stringify(failedNumbers)}`
-          : ''
+          ? `❌ Numbers that failed to send: ${JSON.stringify(failedNumbers)}`
+          : '🧳'
       }`,
     );
   }
@@ -103,8 +103,8 @@ export async function execute(interaction: CommandInteraction, client: Client) {
   return void interaction.reply(
     `Messages have been sent. ${
       failedNumbers.length !== 0
-        ? `Numbers that failed to send: ${JSON.stringify(failedNumbers)}`
-        : ''
+        ? `❌ Numbers that failed to send: ${JSON.stringify(failedNumbers)}`
+        : '🧳'
     }`,
   );
 }

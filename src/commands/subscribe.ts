@@ -28,11 +28,11 @@ export async function execute(interaction: CommandInteraction, client: Client) {
   try {
     const data = await guilds.where({ guild_id: interaction.guild.id });
     if (data.length === 0) {
-      throw new Error('Guild not registered.');
+      throw new Error('Guild not registered. ❌');
     }
   } catch (err) {
     console.error(err);
-    return void interaction.reply('Guild is not registered.');
+    return void interaction.reply('Guild is not registered. ❌');
   }
 
   // VALIDATE PHONE NUMBER
@@ -57,7 +57,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
       .merge({ active: true });
   } catch (err) {
     console.error(err);
-    return void interaction.reply('An error occured during insert.');
+    return void interaction.reply('An error occured during insert. ❌');
   }
 
   return void interaction.reply('You are now subscribed! 📬');
