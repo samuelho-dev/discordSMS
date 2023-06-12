@@ -71,3 +71,15 @@ export function createRestApi(client: Client) {
   });
   return app;
 }
+
+// EXAMPLE ERROR OBJECT
+
+// const ErrorObj = {
+// ﻿ParentAccountSid: '',
+// ﻿Payload: '{"resource_sid":"SMf14f53d739369e083ca0527f2cab37f4","service_sid":"SMf14f53d739369e083ca0527f2cab37f4","error_code":"11200","more_info":{"Msg":"Bad Gateway","sourceComponent":"14100","ErrorCode":"11200","EmailNotification":"false","httpResponse":"502","LogLevel":"ERROR","url":"https://discordsms.up.railway.app/sms";},"webhook":{"type":"application/json","request":{"url":"https://discordsms.up.railway.app/sms","method":"POST","headers";:{},"parameters":{"ApiVersion":"2010-04-01","SmsSid":"SMf14f53d739369e083ca0527f2cab37f4","SmsStatus":"received","SmsMessageSid":"SMf14f53d739369e083ca0527f2cab37f4","NumSegments":"1","From":"+16262837110","ToState":"","MessageSid":"SMf14f53d739369e083ca0527f2cab37f4","AccountSid":"ACa4d7494bb9cba8effc4aa12d021b6fa4","ToZip":"","FromCountry":"US","ToCity":"","FromCity":"ALHAMBRA","To":"+18777193978","FromZip":"91803","Body":"Stop","ToCountry":"US","FromState":"CA","NumMedia":"0"}},"response":{"status_code":null,"headers":{"content-length":"430","X-Twilio-WebhookError":"11203 HTTP communication total time out triggered","X-Twilio-WebhookAttempt":"1","connection":"close","content-type":"text/html"},"body":"Twilio was unable to fetch content from: http://discordsms.up.railway.app/sms\\nError: Total timeout is triggered. Configured tt is 15000ms and we attempted 1 time(s)\\nAccount SID: ACa4d7494bb9cba8effc4aa12d021b6fa4\\nSID: SMf14f53d739369e083ca0527f2cab37f4\\nRequest ID: 33412e1f-e611-4704-ae04-74d6eb77b844\\nRemote Host: discordsms.up.railway.app\\nRequest Method: POST\\nRequest URI: http://discordsms.up.railway.app/sms\\nURL Fragment: true"}}}',
+// ﻿Level: 'ERROR',
+// ﻿Timestamp: '2023-06-12T18:44:24.368Z',
+// ﻿PayloadType: 'application/json',
+// ﻿AccountSid: 'ACa4d7494bb9cba8effc4aa12d021b6fa4',
+// ﻿Sid: 'NO42c4762959e63d990f1ec746b8d6a67e'
+// ﻿}
