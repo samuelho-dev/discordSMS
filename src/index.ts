@@ -6,7 +6,7 @@ import { Member } from 'knex/types/tables';
 import validatePhoneForE164 from './utils/validateNumberE164';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.post('/interactions', async function (req, res) {});
 
