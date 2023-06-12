@@ -22,9 +22,6 @@ export const data = new SlashCommandBuilder()
   );
 
 export async function execute(interaction: CommandInteraction, client: Client) {
-  // IF THE MESSAGE ISNT A STRING
-  const message = interaction.options.get('message')?.value;
-  if (typeof message !== 'string') return;
   if (!interaction.guild || !interaction.guild.id) return;
 
   // MEMBER MUST BE AN ADMIN
@@ -48,9 +45,11 @@ export async function execute(interaction: CommandInteraction, client: Client) {
     return void interaction.reply('There are no subscribers to this guild.');
   }
 
+  // SEND MESSAGE TO NUMBERS - PUSH FAILED NUMBERS TO ARR
   const failedNumbers = [];
 
-  // SEND MESSAGE TO NUMBERS - PUSH FAILED NUMBERS TO ARR
+  const message = interaction.options.get('message')?.value;
+  if (typeof message !== 'string') return;
   for (const number of phoneNumbers) {
     const E164Number = number.phone_number;
     const validatedNumber = validatePhoneForE164(E164Number);

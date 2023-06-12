@@ -24,9 +24,6 @@ export const data = new SlashCommandBuilder()
   );
 
 export async function execute(interaction: CommandInteraction, client: Client) {
-  const number = interaction.options.get('phone_number')?.value;
-  const E164Number = `+1${number}`;
-  if (typeof number !== 'string') return;
   if (!interaction.guild || !interaction.guild.id) return;
 
   // MEMBER MUST BE AN ADMIN
@@ -51,6 +48,9 @@ export async function execute(interaction: CommandInteraction, client: Client) {
   }
 
   // VALIDATE PHONE NUMBER
+  const number = interaction.options.get('phone_number')?.value;
+  const E164Number = `+1${number}`;
+  if (typeof number !== 'string') return;
   const validatedNumber = validatePhoneForE164(E164Number);
   if (!validatedNumber) {
     return void interaction.reply(
