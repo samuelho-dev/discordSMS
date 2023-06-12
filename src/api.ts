@@ -52,14 +52,15 @@ export function createRestApi(client: Client) {
   });
 
   app.post('/smsStatus', async function (req, res) {
-    const { ErrorCode, From } = req.body;
-    console.log(req.body);
+    const { Payload } = req.body;
+    const data = JSON.parse(Payload);
     // Change member to inactive from Stop word
     // https://static1.twilio.com/docs/api/errors/80901
-    if (ErrorCode === '80901') {
+    console.log({ data });
+    if (data.error_code === '80901') {
       const member = db<Member>('members');
       try {
-        await member.where({ phone_number: From }).update({
+        await member.where({ phone_number: data.From }).update({
           active: false,
         });
       } catch (err) {
