@@ -21,20 +21,24 @@ app.post('/sms', async function (req, res) {
   const twiml = new MessagingResponse();
   const smsBody = req.body.Body.toUpperCase();
 
+  // SUBSCRIBE TO LA BEATMAKERS
   if (smsBody === 'BEATS') {
     await members.insert({
       guild_id: `1105562164602880021`,
       phone_number: incomingNumber,
     });
 
-    twiml.message('You are now subscribed!');
+    twiml.message('You are now subscribed! 🎸');
     res.writeHead(200, { 'Content-Type': 'text/xml' });
     res.end(twiml.toString());
-  } else if (smsBody === 'STOP') {
+  }
+
+  // UNSUBSCRIBE
+  if (smsBody === 'STOP') {
     await members
       .where({ phone_number: incomingNumber })
       .update({ active: true, updated_at: new Date() });
-    twiml.message('You are now unsubscribed.');
+    twiml.message('You are now unsubscribed. 😔');
     res.writeHead(200, { 'Content-Type': 'text/xml' });
     res.end(twiml.toString());
   }
