@@ -51,7 +51,7 @@ export function createRestApi(client: Client) {
     }
   });
 
-  app.post('smsStatus', async function (req, res) {
+  app.post('/smsStatus', async function (req, res) {
     const { ErrorCode, From } = req.body;
     console.log(req.body);
     // Change member to inactive from Stop word
