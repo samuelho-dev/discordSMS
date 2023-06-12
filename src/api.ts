@@ -56,8 +56,10 @@ export function createRestApi(client: Client) {
     const data = JSON.parse(Payload);
     // Change member to inactive from Stop word
     // https://static1.twilio.com/docs/api/errors/80901
+
+    // https://www.twilio.com/docs/api/errors/21610#error-21610
     console.log({ data });
-    if (data.error_code === '80901') {
+    if (data.error_code === '21610') {
       const member = db<Member>('members');
       try {
         await member.where({ phone_number: data.From }).update({
