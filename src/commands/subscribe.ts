@@ -36,19 +36,21 @@ export async function execute(interaction: CommandInteraction, client: Client) {
 
   const guilds = db<Guild>('guilds');
 
-  // ALLOWED GUILDS ONLY
-  try {
-    const data = await guilds.where({ guild_id: interaction.guild.id });
-    if (data.length === 0) {
-      throw new Error('Guild not registered. ❌');
-    }
-  } catch (err) {
-    console.error(err);
-    return void interaction.reply('Guild is not registered. ❌');
+  const guild = await guilds.where({ guild_id: interaction.guild.id });
+
+  if (!guild || guild.length === 0 || !guild[0] || !guild[0].tagline) {
+    return void interaction.reply(
+      'Guild is not registered. Please run the /register command. ❌ ',
+    );
   }
 
   // VALIDATE PHONE NUMBER
-  const number = interaction.options.get('phone_number')?.value;
+  const num = interaction.options.get('phone_number');
+  if (!num) {
+    return void interaction.reply('Please input the twilio phone number.');
+  }
+
+  const number = num.value;
   const E164Number = `+1${number}`;
   if (typeof number !== 'string') return;
   const validatedNumber = validatePhoneForE164(E164Number);
@@ -79,7 +81,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
     await twilioClient.messages.create({
       from: config.TWILIO_PHONE_NUMBER,
       to: E164Number,
-      body: 'Welcome to Hi-Pass 🌊! Stay tuned for more events coming straight to you. To opt out, reply "STOP"',
+      body: guild[0].tagline,
     });
   } catch (err) {
     console.error(err);
