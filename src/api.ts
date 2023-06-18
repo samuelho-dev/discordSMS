@@ -1,7 +1,6 @@
 import express from 'express';
-import slowDown from 'express-slow-down';
 import { Client } from 'discord.js';
-import { Member } from 'knex/types/tables';
+import { Guild, Member } from 'knex/types/tables';
 import validatePhoneForE164 from './utils/validateNumberE164';
 import MessagingResponse from 'twilio/lib/twiml/MessagingResponse';
 import db from './db/knex';
@@ -11,41 +10,50 @@ export function createRestApi(client: Client) {
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
 
-  // SLOW DOWN IMPLEMENT
-  const speedLimiter = slowDown({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    delayAfter: 100, // allow 100 requests per 15 minutes, then...
-    delayMs: 500, // begin adding 500ms of delay per request above 100
-  });
-  app.use(speedLimiter);
-
   app.post('/sms', async function (req, res) {
     const incomingNumber = req.body.From;
+    const receivingNumber = req.body.TO;
     const members = db<Member>('members');
+    const guilds = db<Guild>('guilds');
 
     if (!validatePhoneForE164(incomingNumber)) {
       return res.status(400).send('Number is not valid');
     }
 
+    if (!receivingNumber || typeof receivingNumber !== 'string') {
+      return res.status(400).send('Number is not valid');
+    }
+
     const twiml = new MessagingResponse();
     const smsBody = req.body.Body.toUpperCase();
+    const guild = await guilds
+      .first({
+        phone_number: receivingNumber,
+      })
+      .select({
+        guild_id: true,
+        guild_name: true,
+        sms_tag: true,
+        tagline: true,
+      });
 
-    // SUBSCRIBE TO LA BEATMAKERS
-    if (smsBody === 'BEATS') {
+    if (!guild) {
+      return res.status(400).send('Guild does not exist.');
+    }
+    // SUBSCRIBE
+    if (smsBody === guild.sms_tag) {
       // IF ALREADY A MEMBER THEN EXIT
       const existingMember = await members.where({
         phone_number: incomingNumber,
       });
-      if (existingMember.length !== 0) res.end();
+      if (existingMember.length !== 0) return res.end();
 
       await members.insert({
-        guild_id: `1105562164602880021`,
+        guild_id: guild.guild_id,
         phone_number: incomingNumber,
       });
 
-      twiml.message(
-        'You are now subscribed to Hi-Pass events! 🌊 to opt out, reply "STOP" ',
-      );
+      twiml.message(guild.tagline);
       res.writeHead(200, { 'Content-Type': 'text/xml' });
       res.end(twiml.toString());
     }
@@ -62,7 +70,7 @@ export function createRestApi(client: Client) {
     if (data.error_code === '21610') {
       const member = db<Member>('members');
       try {
-        await member.where({ phone_number: data.From }).update({
+        await member.first({ phone_number: data.From }).update({
           active: false,
         });
       } catch (err) {
