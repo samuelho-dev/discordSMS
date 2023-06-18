@@ -36,9 +36,11 @@ export async function execute(interaction: CommandInteraction, client: Client) {
 
   const guilds = db<Guild>('guilds');
 
-  const guild = await guilds.where({ guild_id: interaction.guild.id });
+  const guild = await guilds
+    .first({ guild_id: interaction.guild.id })
+    .select({ tagline: true });
 
-  if (!guild || guild.length === 0 || !guild[0] || !guild[0].tagline) {
+  if (!guild) {
     return void interaction.reply(
       'Guild is not registered. Please run the /register command. ❌ ',
     );
@@ -81,7 +83,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
     await twilioClient.messages.create({
       from: config.TWILIO_PHONE_NUMBER,
       to: E164Number,
-      body: guild[0].tagline,
+      body: guild.tagline,
     });
   } catch (err) {
     console.error(err);

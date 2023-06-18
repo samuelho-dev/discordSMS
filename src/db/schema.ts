@@ -3,7 +3,7 @@ declare module 'knex/types/tables' {
     id: number;
     guild_id: string;
     guild_name: string;
-    phone_number: string;
+    phone_number: string | null;
     sms_tag: string;
     tagline: string;
     updated_at: Date;
