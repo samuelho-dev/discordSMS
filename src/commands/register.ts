@@ -4,11 +4,8 @@ import {
   GuildMember,
   SlashCommandBuilder,
 } from 'discord.js';
-import { Guild, Member, Message } from 'knex/types/tables';
+import { Guild } from 'knex/types/tables';
 import db from '../db/knex';
-import { Twilio } from 'twilio';
-import { scrypt } from 'crypto';
-import { hashString } from '~/utils/hash';
 
 export const data = new SlashCommandBuilder()
   .setName('register')
@@ -90,7 +87,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
   } catch (err) {
     console.error(err);
     return interaction.reply(
-      'An error occured while creating the API key, please check your credentials.',
+      'An error occured while registration, please check your credentials.',
     );
   }
 
