@@ -21,16 +21,16 @@ export const data = new SlashCommandBuilder()
     option
       .setName('sms_tag')
       .setDescription(
-        'Enter the keyword you would like users to subscribe with Ex: Text "{sms_tag}" to subscribe for updates.',
+        'Enter the keyword you would like users to subscribe with. Max 5 Characters.',
       )
       .setRequired(true)
-      .setMaxLength(10),
+      .setMaxLength(5),
   )
   .addStringOption((option) =>
     option
       .setName('tagline')
       .setDescription(
-        'Enter the tagline to subscribe. Ex: {tagline} Text "{sms_tag}" to subscribe for updates. Text "STOP" to unsubscribe.',
+        'Enter the tagline that you will be sending your users. Max 200 Characters.',
       )
       .setRequired(true)
       .setMaxLength(200),
