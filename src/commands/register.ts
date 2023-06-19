@@ -59,7 +59,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
     );
   }
 
-  const guilds = db<Guild>('guild');
+  const guilds = db<Guild>('guilds');
   const guild = guilds.where({ guild_id: interaction.guild.id });
 
   try {
