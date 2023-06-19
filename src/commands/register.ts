@@ -70,7 +70,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
         sms_tag: sms_tag.value,
         tagline: tagline.value,
       })
-      .onConflict(['guild_id'])
+      .onConflict('guild_id')
       .merge({
         guild_name: name.value,
         sms_tag: sms_tag.value,
@@ -80,7 +80,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
   } catch (err) {
     console.error(err);
     return interaction.reply(
-      'An error occured while registration, please check your credentials.',
+      'An error occured while inserting guild, please try again and check your inputs.',
     );
   }
 
