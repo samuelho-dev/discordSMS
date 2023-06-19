@@ -39,14 +39,6 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction: CommandInteraction, client: Client) {
   if (!interaction.guild || !interaction.guild.id) return;
 
-  // MEMBER MUST BE AN ADMIN
-  const member = interaction.member as GuildMember;
-  if (!member.permissions.has('Administrator')) {
-    return interaction.reply(
-      'You do not have the required permissions to use this command. ❌',
-    );
-  }
-
   const name = interaction.options.get('name');
 
   if (!name || !name.value || typeof name.value !== 'string') {
@@ -83,6 +75,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
         guild_name: name.value,
         sms_tag: sms_tag.value,
         tagline: tagline.value,
+        updated_at: new Date(),
       });
   } catch (err) {
     console.error(err);

@@ -4,7 +4,7 @@ import {
   GuildMember,
   SlashCommandBuilder,
 } from 'discord.js';
-import { Member, Message } from 'knex/types/tables';
+import { Guild, Member, Message } from 'knex/types/tables';
 import db from '../db/knex';
 import twilioClient from '../twilio';
 import config from '../config';
@@ -24,16 +24,19 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction: CommandInteraction, client: Client) {
   if (!interaction.guild || !interaction.guild.id) return;
 
-  // MEMBER MUST BE AN ADMIN
-  const member = interaction.member as GuildMember;
-  if (!member.permissions.has('Administrator')) {
-    return interaction.reply(
-      'You do not have the required permissions to use this command. ❌',
-    );
-  }
-
   const members = db<Member>('members');
   const messages = db<Message>('messages');
+  const guilds = db<Guild>('guilds');
+
+  const guild = await guilds
+    .first({ guild_id: interaction.guild.id })
+    .select({ phone_number: true });
+
+  if (!guild) {
+    return interaction.reply(
+      'Please register your guild with the /register & /updatePhoneNumber command. ❌',
+    );
+  }
 
   // GET ALL PHONE NUMBERS
   const phoneNumbers = await members
@@ -57,7 +60,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
     if (validatedNumber) {
       await twilioClient.messages
         .create({
-          from: config.TWILIO_PHONE_NUMBER,
+          from: guild.phone_number,
           to: E164Number,
           body: message,
         })

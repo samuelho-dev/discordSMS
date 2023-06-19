@@ -26,14 +26,6 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction: CommandInteraction, client: Client) {
   if (!interaction.guild || !interaction.guild.id) return;
 
-  // MEMBER MUST BE AN ADMIN
-  const member = interaction.member as GuildMember;
-  if (!member.permissions.has('Administrator')) {
-    return interaction.reply(
-      'You do not have the required permissions to use this command. ❌',
-    );
-  }
-
   const guilds = db<Guild>('guilds');
 
   const guild = await guilds

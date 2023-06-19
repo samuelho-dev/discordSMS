@@ -1,4 +1,4 @@
-import { Client } from 'discord.js';
+import { Client, GuildMember } from 'discord.js';
 import config from '../config';
 import * as commandModules from '../commands';
 
@@ -15,6 +15,14 @@ client.once('ready', () => {
 client.on('interactionCreate', async (interaction) => {
   if (!interaction.isCommand()) {
     return;
+  }
+
+  // MEMBER MUST BE AN ADMIN
+  const member = interaction.member as GuildMember;
+  if (!member.permissions.has('Administrator')) {
+    return void interaction.reply(
+      'You do not have the required permissions to use this command. ❌',
+    );
   }
 
   const { commandName } = interaction;
