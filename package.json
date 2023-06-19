@@ -1,7 +1,7 @@
 {
   "name": "discordsms",
   "version": "1.0.0",
-  "description": "This is a serverless discord bot utlizing twilio for marketing sms messages and lambda.",
+  "description": "This is a discord bot that utilizes discordjs and simple preloaded commands to get you started managing your SMS marketing.",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
