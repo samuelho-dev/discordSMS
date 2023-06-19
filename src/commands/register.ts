@@ -45,7 +45,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
     return interaction.reply('Please input your name.');
   }
 
-  const sms_tag = interaction.options.get('name');
+  const sms_tag = interaction.options.get('sms_tag');
   if (!sms_tag || !sms_tag.value || typeof sms_tag.value !== 'string') {
     return interaction.reply(
       'Please input the tag you would like your subscribers to message.',
