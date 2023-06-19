@@ -1,5 +1,5 @@
 {
-  "name": "DiscordSMS",
+  "name": "discordsms",
   "version": "1.0.0",
   "description": "This is a serverless discord bot utlizing twilio for marketing sms messages and lambda.",
   "main": "index.js",
