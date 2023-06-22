@@ -10,7 +10,7 @@ import validatePhoneForE164 from '../utils/validateNumberE164';
 
 export const data = new SlashCommandBuilder()
   .setName('update_phone_number')
-  .setDescription('Send an SMS to your group.')
+  .setDescription('Update the current guilds phone number.')
   .addStringOption((option) =>
     option
       .setName('phone_number')
@@ -34,7 +34,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
   if (!validatePhoneForE164(phone_number.value)) {
     return interaction.reply('Invalid format. Ex. 3138884444');
   }
-  const guild = db<Guild>('guild');
+  const guild = db<Guild>('guilds');
 
   try {
     await guild
