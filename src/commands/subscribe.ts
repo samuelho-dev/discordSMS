@@ -30,7 +30,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
 
   const guild = await guilds
     .first({ guild_id: interaction.guild.id })
-    .select({ phone_number: true });
+    .select({ phone_number: true, tagline: true });
 
   if (!guild) {
     return interaction.reply(
