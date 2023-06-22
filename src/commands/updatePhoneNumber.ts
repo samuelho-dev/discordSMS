@@ -1,9 +1,4 @@
-import {
-  Client,
-  CommandInteraction,
-  GuildMember,
-  SlashCommandBuilder,
-} from 'discord.js';
+import { Client, CommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { Guild } from 'knex/types/tables';
 import db from '../db/knex';
 import validatePhoneForE164 from '../utils/validateNumberE164';
@@ -41,11 +36,7 @@ export async function execute(interaction: CommandInteraction, client: Client) {
       .where({
         guild_id: interaction.guild.id,
       })
-      .insert({
-        phone_number: phone_number.value,
-      })
-      .onConflict(['phone_number'])
-      .merge({
+      .update({
         phone_number: phone_number.value,
       });
   } catch (err) {
