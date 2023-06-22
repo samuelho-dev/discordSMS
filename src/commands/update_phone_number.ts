@@ -31,6 +31,16 @@ export async function execute(interaction: CommandInteraction, client: Client) {
   }
   const guild = db<Guild>('guilds');
 
+  const curGuild = await guild.first({
+    guild_id: interaction.guild.id,
+  });
+
+  if (!curGuild) {
+    return interaction.reply(
+      'Guild is not registered. Please use /register first.',
+    );
+  }
+
   try {
     await guild
       .where({

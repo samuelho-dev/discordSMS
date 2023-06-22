@@ -30,11 +30,11 @@ export async function execute(interaction: CommandInteraction, client: Client) {
 
   const guild = await guilds
     .first({ guild_id: interaction.guild.id })
-    .select({ tagline: true });
+    .select({ phone_number: true });
 
   if (!guild) {
-    return void interaction.reply(
-      'Guild is not registered. Please run the /register command. ❌ ',
+    return interaction.reply(
+      'Please register your guild with the /register & /updatePhoneNumber command. ❌',
     );
   }
 
